@@ -1,0 +1,52 @@
+pragma solidity ^0.8.0;
+
+import "@chainlink/contracts/src/v0.8/interfaces/IERC20.sol";
+import "@chainlink/contracts/src/v0.8/libraries/Chainlink.sol";
+
+contract TokenSwap {
+
+    address public owner;
+
+    event Transfer(address indexed from, address indexed to, uint256 amount);
+
+    function transferTokens(address to, uint256 amount) public {
+        require(to != address(0));
+        require(amount > 0);
+
+        // Get the current price of the tokens being transferred.
+        IERC20 token = IERC20(msg.sender);
+        uint256 tokenPrice = Chainlink.getPrice(token);
+
+        // Calculate the amount of tokens to be received by the recipient.
+        uint256 amountReceived = amount / tokenPrice;
+
+        // Verify the ownership of the tokens being transferred.
+        Chainlink.verifyOwnership(token, msg.sender, amount);
+
+        // Transfer the tokens.
+        token.transfer(to, amountReceived);
+
+        emit Transfer(msg.sender, to, amount);
+    }
+
+    function swapTokens(address to, uint256 amount) public {
+        require(to != address(0));
+        require(amount > 0);
+
+        // Check if the user wants to transfer tokens within the Polygon network.
+        if (msg.sender.isOnPolygon()) {
+            // Transfer the tokens.
+            transferTokens(to, amount);
+        } else {
+            // Swap the tokens.
+            // ...
+        }
+    }
+
+    function setOwner(address newOwner) public {
+        require(msg.sender == owner);
+
+        owner = newOwner;
+    }
+
+}
