@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Transfer</title>
+</head>
+<body>
+    <h1>Token Transfer</h1>
+    <div>
+        <label for="tokenIn">Token In</label>
+        <select id="tokenIn">
+            <option value="USDC">USDC</option>
+            <option value="WETH">WETH</option>
+        </select>
+    </div>
+    <div>
+        <label for="tokenOutChain">Token Out Chain</label>
+        <select id="tokenOutChain">
+            <option value="ETH">ETH</option>
+            <option value="OPTIMISM">OPTIMISM</option>
+            <option value="AVALANCHE">AVALANCHE</option>
+            <option value="ARBITRUM">ARBITRUM</option>
+        </select>
+    </div>
+    <div>
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" value="100" />
+    </div>
+    <button id="transfer">Transfer</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        const tokenIn = document.getElementById("tokenIn");
+        const tokenOutChain = document.getElementById("tokenOutChain");
+        const amount = document.getElementById("amount");
+        const button = document.getElementById("transfer");
+
+        button.addEventListener("click", () => {
+            const txHash = transferTokens(tokenIn.value, tokenOutChain.value, amount.value);
+            const div = document.getElementById("transaction-hash");
+            div.innerHTML = txHash;
+        });
+    </script>
+    <div id="transaction-hash"></div>
+</body>
+</html>
